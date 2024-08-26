@@ -41,7 +41,7 @@
                         {name}
                         bind:value={bindValue}
                         {placeholder}
-                        class="focus:outline-0 w-full text-lg border p-2 rounded-md"
+                        class="focus:outline-0 w-full text-lg border p-2 rounded-md dark:bg-neutral-800 dark:text-neutral-200"
                         use:events
                 />
             {/if}
@@ -53,7 +53,7 @@
                         {name}
                         bind:value={bindValue}
                         {placeholder}
-                        class="focus:outline-0 w-full text-lg border p-2 rounded-md"
+                        class="focus:outline-0 w-full text-lg border p-2 rounded-md dark:bg-neutral-800 dark:text-neutral-200"
                         use:events
                 />
             {/if}
@@ -66,7 +66,7 @@
                         bind:value={bindValue}
                         {placeholder}
                         use:events
-                        class="focus:outline-0 w-full text-lg border p-2 rounded-md"
+                        class="focus:outline-0 w-full text-lg border p-2 rounded-md dark:bg-neutral-800 dark:text-neutral-200"
                 />
             {/if}
 
@@ -77,7 +77,7 @@
                         bind:value={bindValue}
                         {placeholder}
                         use:events
-                        class="focus:outline-0 w-full text-lg border p-2 rounded-md"
+                        class="focus:outline-0 w-full text-lg border p-2 rounded-md dark:bg-neutral-800 dark:text-neutral-200"
                         {rows}
                 ></textarea>
             {/if}

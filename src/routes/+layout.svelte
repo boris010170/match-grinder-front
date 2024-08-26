@@ -16,8 +16,7 @@
 <div class="">
     <Header/>
 
-    <main class="px-2">
-        {$uuid}
+    <main class="max-w-lg mx-auto px-2">
         <slot/>
     </main>
 </div>

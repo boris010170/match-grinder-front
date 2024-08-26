@@ -58,8 +58,14 @@
 
     <Input name="username" bind:bindValue={username} placeholder="Имя пользователя"/>
     <Input type="password" name="password" bind:bindValue={password} placeholder="Пароль"/>
-    <div class="text-right">
-        <button on:click|preventDefault={SignIn} class="bg-indigo-800 px-3 py-2 rounded-md text-neutral-200">Войти</button>
-    </div>
 
+    <div class="flex gap-3 justify-end">
+        <div class="py-2">
+            <a href="{$baseUrl}/signup">Регистрация</a>
+        </div>
+        <div class="text-right">
+            <button on:click|preventDefault={SignIn} class="bg-indigo-800 px-3 py-2 rounded-md text-neutral-200">Войти
+            </button>
+        </div>
+    </div>
 </div>
