@@ -28,7 +28,7 @@
 
     $: if (!$userStore || $userStore.is_guest) {
         if (browser) {
-            goto(`${$baseUrl}/signup`);
+            goto(`${$baseUrl}/signin`);
         }
     }
 </script>
@@ -41,9 +41,6 @@
         </svg>
         <ul>
             {#if !$userStore || $userStore.is_guest}
-                <li>
-                    <a href="{$baseUrl}/signup">Sign up</a>
-                </li>
                 <li>
                     <a href="{$baseUrl}/signin">Sign in</a>
                 </li>
