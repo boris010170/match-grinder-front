@@ -1,8 +1,8 @@
 <script>
     import Header from './Header.svelte';
     import '../app.css';
-    import {baseUrl, apiUrl, titleMain, uuid, darkMode} from '$lib/store';
-    import {AuthGetUUID} from '$lib/Auth';
+    import {baseUrl, apiUrl, titleMain, uuid, darkMode, userStore} from '$lib/store';
+    import {AuthGetUUID, AuthGetUserStore} from '$lib/Auth';
     import {onMount} from "svelte";
     import ThemeToggle from "$lib/ThemeToggle.svelte";
 
@@ -13,6 +13,7 @@
 
     onMount(async () => {
         $uuid = await AuthGetUUID();
+        $userStore = await AuthGetUserStore($uuid, `${$apiUrl}/session`);
     })
 </script>
 
