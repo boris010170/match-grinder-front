@@ -43,15 +43,37 @@
     {/if}
 
     <Input name="name" label="Имя" placeholder="Имя" bind:bindValue="{$userStore.name}" on:change={save}/>
-    <Input name="sex" label="Пол" placeholder="Пол" bind:bindValue="{$userStore.sex}" on:change={save}/>
+    <Input type="select"
+           name="sex"
+           label="Пол"
+           placeholder="Пол"
+           bind:bindValue="{$userStore.sex}"
+           options="{[{'value': 'M', 'label': 'Мужской'}, {'value': 'F', 'label': 'Женский'}]}"
+           on:change={save}/>
 
     <Input name="birth_year" label="Год рождения" placeholder="Год рождения" bind:bindValue="{$userStore.birth_year}"
            on:change={save}/>
     <Input name="height" label="Рост" placeholder="Рост" bind:bindValue="{$userStore.height}" on:change={save}/>
     <Input name="weight" label="Вес" placeholder="Вес" bind:bindValue="{$userStore.weight}" on:change={save}/>
 
-    <Input name="zodiac" label="Знак зодиака" placeholder="Знак зодиака" bind:bindValue="{$userStore.zodiac}"
+    <Input type="select"
+           name="zodiac"
+           label="Знак зодиака"
+           placeholder="Знак зодиака"
+           bind:bindValue="{$userStore.zodiac}"
+           options="{[
+               {'value': 'Aries', 'label': 'Овен'},
+               {'value': 'Taurus', 'label': 'Телец'},
+               {'value': 'Gemini', 'label': 'Близнецы'},
+               {'value': 'Cancer', 'label': 'Рак'},
+               {'value': 'Leo', 'label': 'Лев'},
+               {'value': 'Virgo', 'label': 'Дева'},
+               {'value': 'Libra', 'label': 'Весы'},
+               {'value': 'Scorpio', 'label': 'Скорпион'},
+               {'value': 'Sagittarius', 'label': 'Стрелец'},
+               {'value': 'Capricorn', 'label': 'Козерог'},
+               {'value': 'Aquarius', 'label': 'Водолей'},
+               {'value': 'Pisces', 'label': 'Рыбы'}
+               ]}"
            on:change={save}/>
-
-
 {/if}
