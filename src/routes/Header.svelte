@@ -25,12 +25,6 @@
             console.log(e.message);
         }
     }
-
-    $: if (!$userStore || $userStore.is_guest) {
-        if (browser) {
-            goto(`${$baseUrl}/signin`);
-        }
-    }
 </script>
 
 <header>
@@ -46,6 +40,9 @@
                 </li>
 
             {:else}
+                <li>
+                    <a href="{$baseUrl}/profile">профиль</a>
+                </li>
                 <li>
                     <a href="{$baseUrl}/signup" on:click|preventDefault={Logout}>Logout</a>
                 </li>
