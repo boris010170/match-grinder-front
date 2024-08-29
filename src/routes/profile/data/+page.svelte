@@ -32,8 +32,7 @@
 </script>
 
 <svelte:head>
-    <title>Home</title>
-    <meta name="description" content="Svelte demo app"/>
+    <title>Профиль</title>
 </svelte:head>
 
 {#if $userStore && !$userStore.is_guest}
