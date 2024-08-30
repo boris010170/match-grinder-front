@@ -1,12 +1,10 @@
-<script>
+<script lang="ts">
     import {apiUrl, uploadsUrl, uuid} from "$lib/store.js";
-    import Input from "$lib/Input.svelte";
 
-    export let images = [];
-
+    export let images: Image[] = [];
     let errorMessage;
 
-    async function imageDelete(index) {
+    async function imageDelete(index: number) {
 
         const response = await fetch(`${$apiUrl}/api/v1/user/delete-image?id=${images[index].id}`, {
             method: 'DELETE',
@@ -23,7 +21,7 @@
         }
     }
 
-    function imageSort(index, up = 1) {
+    function imageSort(index: number, up = 1) {
         if (up === 1) {
             images = imageMoveUp(images, index);
         } else {
@@ -36,7 +34,7 @@
     }
 
     // Функция для перемещения элемента массива вверх
-    function imageMoveUp(arr, index) {
+    function imageMoveUp(arr: Image[], index: number) {
         if (index <= 0 || index >= arr.length) {
             return arr; // Невозможно переместить вверх
         }
@@ -45,7 +43,7 @@
     }
 
     // Функция для перемещения элемента массива вниз
-    function imageMoveDown(arr, index) {
+    function imageMoveDown(arr: Image[], index: number) {
         if (index < 0 || index >= arr.length - 1) {
             return arr; // Невозможно переместить вниз
         }
@@ -57,7 +55,7 @@
     <div class="grid grid-cols-3 gap-2">
         {#each images as image, i}
             <div>
-                <div class="w-full aspect-square items-center justify-center" style="background-color: {image.color}">
+                <div class="w-full aspect-square items-center justify-center">
                     <img src="{$uploadsUrl}/{image.url}"
                          class="h-full mx-auto object-cover"
                          alt="{image.name}"/>

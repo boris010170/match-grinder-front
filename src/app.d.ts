@@ -8,6 +8,18 @@ declare global {
 		// interface PageState {}
 		// interface Platform {}
 	}
+
+	/**
+	 * Фото пользователя
+	 */
+	interface Image {
+		id: number;
+		sort: number;
+		size: number;
+		name: string;
+		url: string;
+		ratio: number | null;
+	}
 }
 
 export {};
