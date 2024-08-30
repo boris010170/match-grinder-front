@@ -32,12 +32,12 @@ export const uuid = writable();
 
 /**
  * Хранилище данных пользователя.
- * @type {import('svelte/store').Writable<string>}
+ * @type {import('svelte/store').Writable<UserStore>}
  */
 export const userStore = writable();
 
 /**
  * Тема сайта по умолчанию.
- * @type {import('svelte/store').Writable<string>}
+ * @type {import('svelte/store').Writable<boolean>}
  */
 export const darkMode = writable();

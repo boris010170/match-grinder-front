@@ -1,7 +1,7 @@
-<script>
+<script lang="ts">
     import {baseUrl, uploadsUrl} from "$lib/store.js";
 
-    export let avatar = "";
+    export let avatar: Image | null = null;
 </script>
 
 <div class="w-3/4 mx-auto">
