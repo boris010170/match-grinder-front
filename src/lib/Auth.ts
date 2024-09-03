@@ -1,3 +1,4 @@
+// @ts-ignore
 import {getCookie, setCookie} from 'svelte-cookie';
 
 // import { v4 as uuidv4 } from "uuid";
@@ -19,7 +20,7 @@ export async function AuthGetUUID(): Promise<string> {
 export async function AuthGetUserStore(uuid: string, url: string): Promise<any> {
 
     let userStore = {
-        isGuest: true,
+        is_guest: true,
     }
 
     try {

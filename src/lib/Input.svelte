@@ -1,6 +1,6 @@
 <script>
-    import { current_component } from 'svelte/internal';
-    import { bubble, listen } from 'svelte/internal';
+    import {current_component} from 'svelte/internal';
+    import {bubble, listen} from 'svelte/internal';
 
     export let error = undefined;
     export let type = 'text';
@@ -9,6 +9,8 @@
     export let label = undefined;
     export let placeholder = undefined;
     export let rows = 3;
+
+    export let options = [];
 
     const events = getEventsAction(current_component);
 
@@ -83,12 +85,21 @@
             {/if}
 
             {#if type === 'hidden'}
-                <input type="hidden" id={name} {name} bind:value={bindValue} use:events />
+                <input type="hidden" id={name} {name} bind:value={bindValue} use:events/>
             {/if}
 
             {#if type === 'checkbox'}
-                <input type="checkbox" id={name} bind:checked={bindValue} use:events />
+                <input type="checkbox" id={name} bind:checked={bindValue} use:events/>
                 <label for={name}>{name}</label>
+            {/if}
+
+            {#if type === 'select'}
+                <select id={name} {name} bind:value={bindValue} {placeholder} use:events
+                        class="focus:outline-0 w-full text-lg border p-2 rounded-md dark:bg-neutral-800 dark:text-neutral-200">
+                    {#each options as option}
+                        <option value={option.value}>{option.label}</option>
+                    {/each}
+                </select>
             {/if}
         </div>
     </div>
