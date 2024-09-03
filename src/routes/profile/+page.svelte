@@ -32,7 +32,7 @@
 {#if $userStore && !$userStore.is_guest}
     <div>
         <div class="mb-3">
-            <ProfileAvatar avatar="{($userStore.images && $userStore.images[0]) ? $userStore.images[0] : null}"/>
+            <ProfileAvatar avatar="{($userStore.images && $userStore.images[0]) ? $userStore.images[0].url : null}"/>
         </div>
 
         <div class="text-center text-lg mb-3">
