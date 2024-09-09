@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
     import {apiUrl, userStore, uuid} from "$lib/store.js";
     import Input from "$lib/Input.svelte";
     import Flash from "$lib/Flash.svelte";
@@ -29,10 +29,52 @@
             errorMessage = e.message
         }
     }
+
+    let theMap: object | null = null;
+    let theMarker: object | null = null;
+
+    async function mapInit() {
+        ymaps.ready(TheMapInit);
+    }
+
+    async function TheMapInit() {
+        if (!theMap) {
+            if ($userStore.lat == 0.0) {
+                $userStore.lat = 55.76;
+            }
+            if ($userStore.lng == 0.0) {
+                $userStore.lng = 37.64;
+            }
+            theMap = new ymaps.Map("theMap",
+                {
+                    center: [$userStore.lat, $userStore.lng],
+                    zoom: 12
+                },
+                {searchControlProvider: 'yandex#search'}
+            );
+            theMarker = new ymaps.Placemark(theMap.getCenter());
+            theMap.geoObjects.add(theMarker);
+            // Отслеживает все перемещения карты, даже перетаскивание пользователем и плавное масштабирование
+            theMap.events.add('actionend', () => {
+                theMarker.geometry.setCoordinates(theMap.getCenter());
+                [$userStore.lat, $userStore.lng] = theMap.getCenter();
+                save();
+            });
+        }
+    }
+
+    $: if ($userStore && !$userStore.is_guest) {
+        mapInit();
+    }
 </script>
 
 <svelte:head>
     <title>Профиль</title>
+    <script defer async
+            src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=cf1b8beb-bb0c-4563-9d28-c603002dd2ad"
+            on:load={mapInit}
+    >
+    </script>
 </svelte:head>
 
 {#if $userStore && !$userStore.is_guest}
@@ -75,4 +117,6 @@
                {'value': 'Pisces', 'label': 'Рыбы'}
                ]}"
            on:change={save}/>
+
+    <div id="theMap" class="h-96 border"></div>
 {/if}
