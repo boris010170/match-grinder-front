@@ -1,8 +1,33 @@
 <script lang="ts">
-    import {apiUrl, uploadsUrl, uuid} from "$lib/store.js";
+    import {apiUrl, uploadsUrl, uuid, userStore} from "$lib/store.js";
 
     export let images: Image[] = [];
     let errorMessage;
+
+    async function save() {
+        errorMessage = "";
+        try {
+            const response = await fetch(`${$apiUrl}/api/v1/user/update`, {
+                method: 'POST',
+                body: JSON.stringify($userStore),
+                headers: new Headers({
+                    'uuid': $uuid,
+                    'Content-Type': 'application/json',
+                }),
+            });
+
+            if (response.ok) {
+                $userStore = await response.json();
+                console.log($userStore);
+            } else {
+                let responseMessage = await response.json();
+                errorMessage = responseMessage.message;
+                console.log(errorMessage);
+            }
+        } catch (e) {
+            errorMessage = e.message
+        }
+    }
 
     async function imageDelete(index: number) {
 
@@ -31,6 +56,8 @@
             images[index].sort = index + 1;
             return acc + 1;
         }, 0);
+
+        save();
     }
 
     // Функция для перемещения элемента массива вверх
