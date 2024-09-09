@@ -51,6 +51,11 @@
     <Input name="search_radius" label="Радиус поиска" placeholder="Радиус поиск"
            bind:bindValue="{$userStore.search_radius}" on:change={save}/>
 
+    <Input name="search_from" label="Возраст от" placeholder="Возраст от"
+           bind:bindValue="{$userStore.search_from}" on:change={save}/>
+    <Input name="search_to" label="Возраст до" placeholder="Возраст до" bind:bindValue="{$userStore.search_to}"
+           on:change={save}/>
+
     <Input name="search_height_from" label="Рост от" placeholder="Рост от"
            bind:bindValue="{$userStore.search_height_from}" on:change={save}/>
     <Input name="search_height_to" label="Рост до" placeholder="Рост до" bind:bindValue="{$userStore.search_height_to}"
