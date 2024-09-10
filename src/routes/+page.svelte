@@ -7,5 +7,3 @@
     <meta name="description" content="Svelte demo app"/>
 </svelte:head>
 
-<img src="{$baseUrl}/favicon_big.png" class="object-cover" alt="logo">
-
