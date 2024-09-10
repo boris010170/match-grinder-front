@@ -43,6 +43,7 @@ declare global {
         search_weight_to?: number;
         search_height_from?: number;
         search_height_to?: number;
+        in_search?: number;
         images?: Image[];
     }
 }
