@@ -8,13 +8,11 @@
 [&>div>a>svg]:mx-auto
 ">
     <div>
-        <a href="{$baseUrl}">
+        <a href="{$baseUrl}/search">
             <svg role="link" viewBox="0 0 25 25" width="25" height="25" class="stroke-neutral-400 fill-neutral-800">
                 <circle cx="6.5" cy="6.5" r="5"/>
                 <path d="M14 14L10 10"/>
             </svg>
-
-
             Поиск
         </a>
     </div>
