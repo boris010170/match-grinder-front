@@ -1,9 +1,8 @@
 <script>
-    import {baseUrl} from "$lib/store.js";
+    import {titleMain} from "$lib/store.js";
 </script>
 
 <svelte:head>
-    <title>Home</title>
-    <meta name="description" content="Svelte demo app"/>
+    <title>{$titleMain}</title>
 </svelte:head>
 
