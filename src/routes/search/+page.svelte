@@ -40,12 +40,40 @@
     }
 
     async function nextUser(profile_id: number, is_like: boolean) {
-
+        // Ставим лайк / дизлайк
+        await like(profile_id, is_like);
         // Тут можно удалять элементы массива, но в этом случае картинки будут заново загружаться
         userIndex++;
         // users = users?.slice(userIndex + 1);
         if (users && users.length - userIndex < 5) {
             await searchUsers();
+        }
+    }
+
+    async function like(profile_id: number, is_like: boolean) {
+        errorMessage = "";
+        try {
+            const response = await fetch(`${$apiUrl}/api/v1/like/create`, {
+                method: 'POST',
+                body: JSON.stringify({
+                    profile_id: profile_id,
+                    is_like: is_like
+                }),
+                headers: new Headers({
+                    'uuid': $uuid,
+                    'Content-Type': 'application/json',
+                }),
+            });
+
+            if (response.ok) {
+                console.log(await response.json());
+            } else {
+                let responseMessage = await response.json();
+                errorMessage = responseMessage.message;
+                console.log(errorMessage);
+            }
+        } catch (e) {
+            errorMessage = e.message
         }
     }
 
@@ -72,13 +100,13 @@
                     <div class="absolute top-0 w-full aspect-[3/4]">
                         <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-50">
                             <div class="text-center">
-                                <button on:click={() => nextUser(user.id, false)}
+                                <button on:click={() => nextUser(Number(user.id), false)}
                                         class="border-2 border-red-700 text-red-700 w-10 h-10 rounded-full">
                                     `︵`
                                 </button>
                             </div>
                             <div class="text-center">
-                                <button on:click={() => nextUser(user.id, true)}
+                                <button on:click={() => nextUser(Number(user.id), true)}
                                         class="border-2 border-green-600 text-green-600 w-10 h-10 rounded-full">
                                     `⏝`
                                 </button>
