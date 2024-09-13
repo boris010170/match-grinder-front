@@ -24,7 +24,7 @@
     })
 </script>
 
-<div>
+<div class="mb-20">
     <main class="max-w-lg mx-auto p-2">
         <ThemeToggle/>
         <slot/>

@@ -1,11 +1,17 @@
 <script>
-    import {baseUrl} from "$lib/store.js";
+    import {titleMain} from "$lib/store.js";
 </script>
 
 <svelte:head>
-    <title>Home</title>
-    <meta name="description" content="Svelte demo app"/>
+    <title>{$titleMain}</title>
+    <meta name="description" content="matchgrinder - tinder который работает в России">
 </svelte:head>
-
-<img src="{$baseUrl}/favicon_big.png" class="object-cover" alt="logo">
+<div class="text-center mt-36 text-3xl">
+    <p>
+        Matchgrinder предлагает быстрый и удобный поиск пары.</p>
+    <p>Листайте анкеты, находите тех, кто вам
+        понравился, и начните общение только в случае взаимной симпатии.</p>
+    <p>Простой интерфейс и умные алгоритмы помогут вам
+        легко найти идеального партнёра!</p>
+</div>
 
