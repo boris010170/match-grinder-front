@@ -31,7 +31,7 @@
 
 
             {#each user.images as image, i}
-                <img src={$apiUrl}/{image.url} alt="{user.name}" class="object-cover w-full aspect-[3/4] opacity-5"
+                <img src={$apiUrl}/{image.url} alt="{user.name}" class="object-cover w-full aspect-[3/4]"
                      class:hidden="{imageIndex !== i}"/>
             {/each}
         </div>

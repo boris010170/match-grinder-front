@@ -101,13 +101,13 @@
                         <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-50">
                             <div class="text-center">
                                 <button on:click={() => nextUser(Number(user.id), false)}
-                                        class="border-2 border-red-700 text-red-700 w-10 h-10 rounded-full">
+                                        class="border-4 border-red-700 text-red-900 w-12 h-12 rounded-full bg-red-400 bg-opacity-50 font-bolder">
                                     `︵`
                                 </button>
                             </div>
                             <div class="text-center">
                                 <button on:click={() => nextUser(Number(user.id), true)}
-                                        class="border-2 border-green-600 text-green-600 w-10 h-10 rounded-full">
+                                        class="border-4 border-green-600 text-green-900 w-12 h-12 rounded-full bg-green-400 bg-opacity-50 font-bolder">
                                     `⏝`
                                 </button>
                             </div>
