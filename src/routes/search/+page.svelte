@@ -2,10 +2,13 @@
     import {titleMain, userStore, baseUrl, apiUrl, uuid} from "$lib/store.js";
     import Flash from "$lib/Flash.svelte";
     import SearchUser from "$lib/search/SearchUser.svelte";
+    import Message from "$lib/Message.svelte";
+    import {slide} from 'svelte/transition';
 
     let users: UserStore[] | undefined = undefined;
     let errorMessage = "";
     let userIndex = 0;
+    let message = "";
 
     async function searchUsers() {
         if (!$userStore.in_search) return;
@@ -41,7 +44,7 @@
 
     async function nextUser(profile_id: number, is_like: boolean) {
         // Ставим лайк / дизлайк
-        await like(profile_id, is_like);
+        like(profile_id, is_like);
         // Тут можно удалять элементы массива, но в этом случае картинки будут заново загружаться
         userIndex++;
         // users = users?.slice(userIndex + 1);
@@ -66,7 +69,11 @@
             });
 
             if (response.ok) {
-                console.log(await response.json());
+                let result = await response.json();
+                if (result > 0) {
+                    message = "У вас новое совпадение, так держать!";
+                }
+                console.log(result);
             } else {
                 let responseMessage = await response.json();
                 errorMessage = responseMessage.message;
@@ -90,6 +97,14 @@
     <Flash type="error" message={errorMessage}/>
 {/if}
 
+<div class="relative">
+    {#if message}
+        <div transition:slide={{ duration: 300, axis: 'y' }}
+             class="absolute top-0 left-0 z-50 w-full bg-indigo-800 px-3 py-2 rounded-md text-neutral-200">
+            <Message bind:message={message}/>
+        </div>
+    {/if}
+</div>
 {#if $userStore && !$userStore.is_guest}
     {#if $userStore.in_search}
         {#if users && users.length > 0}
@@ -98,7 +113,7 @@
                     <SearchUser user={user}/>
 
                     <div class="absolute top-0 w-full aspect-[3/4]">
-                        <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-50">
+                        <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-40">
                             <div class="text-center">
                                 <button on:click={() => nextUser(Number(user.id), false)}
                                         class="border-4 border-red-700 text-red-900 w-12 h-12 rounded-full bg-red-400 bg-opacity-50 font-bolder">
