@@ -1,7 +1,7 @@
 <script lang="ts">
     import {titleMain, userStore, baseUrl, apiUrl, uuid} from "$lib/store.js";
     import Flash from "$lib/Flash.svelte";
-    import SearchUser from "$lib/search/SearchUser.svelte";
+    import UserCard from "$lib/UserCard.svelte";
 
     let users: UserStore[] | undefined = undefined;
     let errorMessage = "";
@@ -95,7 +95,8 @@
         {#if users && users.length > 0}
             {#each users as user, i}
                 <div class:hidden="{i !== userIndex}" class="relative">
-                    <SearchUser user={user}/>
+<!--                    <SearchUser user={user}/>-->
+                    <UserCard user={user}/>
 
                     <div class="absolute top-0 w-full aspect-[3/4]">
                         <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-50">
