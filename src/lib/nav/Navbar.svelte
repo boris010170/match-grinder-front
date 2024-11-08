@@ -3,7 +3,7 @@
 </script>
 
 
-<div class="grid grid-cols-2
+<div class="grid grid-cols-4
 [&>div]:text-center
 [&>div>a>svg]:mx-auto
 ">
@@ -16,8 +16,27 @@
             Поиск
         </a>
     </div>
+    {#if $userStore && !$userStore.is_guest}
+        <div>
+            <a href="{$baseUrl}/chats">
+                <!--                <svg role="link" viewBox="0 0 25 25" width="25" height="25" class="fill-neutral-400">-->
+                <!--                    <path d="M4.5 19.67c0-.61.27-1.17.79-1.7a6.83 6.83 0 012.1-1.34c1.7-.75 3.76-1.13 5.11-1.13 1.35 0 3.4.38 5.11 1.13.85.37 1.59.83 2.1 1.35.52.52.79 1.08.79 1.69v1.83h-16v-1.83zM16.5 8.5a4 4 0 11-8 0 4 4 0 018 0z"/>-->
+                <!--                </svg>-->
+                Чаты
+            </a>
+        </div>
+        <div>
+            <a href="{$baseUrl}/history">
+                <!--                <svg role="link" viewBox="0 0 25 25" width="25" height="25" class="fill-neutral-400">-->
+                <!--                    <path d="M4.5 19.67c0-.61.27-1.17.79-1.7a6.83 6.83 0 012.1-1.34c1.7-.75 3.76-1.13 5.11-1.13 1.35 0 3.4.38 5.11 1.13.85.37 1.59.83 2.1 1.35.52.52.79 1.08.79 1.69v1.83h-16v-1.83zM16.5 8.5a4 4 0 11-8 0 4 4 0 018 0z"/>-->
+                <!--                </svg>-->
+                История
+            </a>
+        </div>
+    {/if}
     <div class="relative">
         {#if $userStore && !$userStore.is_guest}
+
             <a href="{$baseUrl}/profile">
                 <svg role="link" viewBox="0 0 25 25" width="25" height="25" class="fill-neutral-400">
                     <path d="M4.5 19.67c0-.61.27-1.17.79-1.7a6.83 6.83 0 012.1-1.34c1.7-.75 3.76-1.13 5.11-1.13 1.35 0 3.4.38 5.11 1.13.85.37 1.59.83 2.1 1.35.52.52.79 1.08.79 1.69v1.83h-16v-1.83zM16.5 8.5a4 4 0 11-8 0 4 4 0 018 0z"/>
