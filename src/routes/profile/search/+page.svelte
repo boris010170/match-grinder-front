@@ -1,5 +1,5 @@
 <script>
-    import {apiUrl, userStore, uuid} from "$lib/store.js";
+    import {apiUrl, userStore, uuid, titleMain} from "$lib/store.js";
     import Input from "$lib/Input.svelte";
     import Flash from "$lib/Flash.svelte";
     import Slider from "$lib/Slider.svelte";
@@ -44,7 +44,7 @@
 </script>
 
 <svelte:head>
-    <title>Параметры поиска</title>
+    <title>Параметры поиска - {$titleMain}</title>
 </svelte:head>
 
 <div class="relative">
