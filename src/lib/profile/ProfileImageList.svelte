@@ -30,19 +30,20 @@
     }
 
     async function imageDelete(index: number) {
-
-        const response = await fetch(`${$apiUrl}/api/v1/user/delete-image?id=${images[index].id}`, {
-            method: 'DELETE',
-            headers: new Headers({
-                'uuid': $uuid,
-                'Content-Type': 'application/json',
-            }),
-        });
-        if (response.ok) {
-            images = await response.json();
-        } else {
-            errorMessage = await response.json();
-            console.log(errorMessage);
+        if (confirm("Вы действительно хотите удалить фото?")) {
+            const response = await fetch(`${$apiUrl}/api/v1/user/delete-image?id=${images[index].id}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'uuid': $uuid,
+                    'Content-Type': 'application/json',
+                }),
+            });
+            if (response.ok) {
+                images = await response.json();
+            } else {
+                errorMessage = await response.json();
+                console.log(errorMessage);
+            }
         }
     }
 
@@ -82,7 +83,7 @@
     <div class="grid grid-cols-3 gap-2">
         {#each images as image, i}
             <div>
-                <div class="w-full aspect-square items-center justify-center">
+                <div class="w-full aspect-square items-center justify-center ">
                     <img src="{$uploadsUrl}/{image.url}"
                          class="h-full mx-auto object-cover"
                          alt="{image.name}"/>
