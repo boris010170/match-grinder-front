@@ -34,7 +34,12 @@
     let theMarker: object | null = null;
 
     async function mapInit() {
-        ymaps.ready(TheMapInit);
+        try {
+            ymaps.ready(TheMapInit);
+        }catch (e) {
+            console.log(e);
+            setTimeout(mapInit, 300);
+        }
     }
 
     async function TheMapInit() {
@@ -71,9 +76,7 @@
 <svelte:head>
     <title>Профиль</title>
     <script defer async
-            src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=cf1b8beb-bb0c-4563-9d28-c603002dd2ad"
-            on:load={mapInit}
-    >
+            src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=cf1b8beb-bb0c-4563-9d28-c603002dd2ad">
     </script>
 </svelte:head>
 
