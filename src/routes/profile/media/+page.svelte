@@ -1,5 +1,5 @@
 <script>
-    import {apiUrl, baseUrl, userStore, uuid, uploadsUrl} from "$lib/store.js";
+    import {apiUrl, userStore, uuid, titleMain} from "$lib/store.js";
     import Flash from "$lib/Flash.svelte";
     import ProfileImageList from "$lib/profile/ProfileImageList.svelte";
 
@@ -27,6 +27,10 @@
         }
     }
 </script>
+
+<svelte:head>
+    <title>Медиа - {$titleMain}</title>
+</svelte:head>
 
 {#if $userStore && !$userStore.is_guest}
 
