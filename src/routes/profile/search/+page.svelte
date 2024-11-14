@@ -1,13 +1,18 @@
 <script>
-    import {apiUrl, userStore, uuid} from "$lib/store.js";
+    import {apiUrl, userStore, uuid, titleMain} from "$lib/store.js";
     import Input from "$lib/Input.svelte";
     import Flash from "$lib/Flash.svelte";
     import Slider from "$lib/Slider.svelte";
+    import Message from "$lib/Message.svelte";
+    import {slide} from 'svelte/transition';
 
     let errorMessage = "";
+    let saving = false;
+    let message = "";
 
     async function save() {
         errorMessage = "";
+        saving = true;
         try {
             const response = await fetch(`${$apiUrl}/api/v1/user/update`, {
                 method: 'POST',
@@ -20,7 +25,11 @@
 
             if (response.ok) {
                 $userStore = await response.json();
-                console.log($userStore);
+                message = "Данные успешно сохранены";
+                setTimeout(() => {
+                    message = ""
+                }, 1500);
+
             } else {
                 let responseMessage = await response.json();
                 errorMessage = responseMessage.message;
@@ -29,12 +38,23 @@
         } catch (e) {
             errorMessage = e.message
         }
+
+        saving = false;
     }
 </script>
 
 <svelte:head>
-    <title>Параметры поиска</title>
+    <title>Параметры поиска - {$titleMain}</title>
 </svelte:head>
+
+<div class="relative">
+    {#if message}
+        <div transition:slide={{ duration: 300, axis: 'y' }}
+             class="absolute top-0 left-0 z-50 w-full bg-indigo-800 px-3 py-2 rounded-md text-neutral-200">
+            <Message bind:message={message}/>
+        </div>
+    {/if}
+</div>
 
 {#if $userStore && !$userStore.is_guest}
 
@@ -73,5 +93,9 @@
     </div>
 
 
-    <button class="border rounded-md p-3 mb-2 text-center w-full" on:click={save}>Сохранить</button>
+    {#if saving}
+        <button class="border rounded-md p-3 mb-2 text-center w-full">Сохранение...</button>
+    {:else}
+        <button class="border rounded-md p-3 mb-2 text-center w-full" on:click={save}>Сохранить</button>
+    {/if}
 {/if}

@@ -30,19 +30,20 @@
     }
 
     async function imageDelete(index: number) {
-
-        const response = await fetch(`${$apiUrl}/api/v1/user/delete-image?id=${images[index].id}`, {
-            method: 'DELETE',
-            headers: new Headers({
-                'uuid': $uuid,
-                'Content-Type': 'application/json',
-            }),
-        });
-        if (response.ok) {
-            images = await response.json();
-        } else {
-            errorMessage = await response.json();
-            console.log(errorMessage);
+        if (confirm("Вы действительно хотите удалить фото?")) {
+            const response = await fetch(`${$apiUrl}/api/v1/user/delete-image?id=${images[index].id}`, {
+                method: 'DELETE',
+                headers: new Headers({
+                    'uuid': $uuid,
+                    'Content-Type': 'application/json',
+                }),
+            });
+            if (response.ok) {
+                images = await response.json();
+            } else {
+                errorMessage = await response.json();
+                console.log(errorMessage);
+            }
         }
     }
 
@@ -79,25 +80,29 @@
     }
 </script>
 {#if images}
-    <div class="grid grid-cols-3 gap-2">
+    <div class="grid grid-cols-2 gap-2">
         {#each images as image, i}
             <div>
-                <div class="w-full aspect-square items-center justify-center">
+                <div class="w-full aspect-square items-center justify-center ">
                     <img src="{$uploadsUrl}/{image.url}"
                          class="h-full mx-auto object-cover"
                          alt="{image.name}"/>
                 </div>
                 <div class="flex gap-2">
                     <div>
-                        <button on:click={()=>imageSort(i,1)}> ⬆️</button>
+                        <button on:click={()=>imageSort(i,1)} class="border rounded-md py-1 px-2 my-1 text-center">
+                            &#8679;
+                        </button>
                     </div>
                     <div>
-                        <button on:click={()=>imageSort(i,0)}> ⬇️</button>
+                        <button on:click={()=>imageSort(i,0)}
+                                class="border rounded-md py-1 px-2 my-1 text-center rotate-180">&#8679;
+                        </button>
                     </div>
-                    <div class="flex-auto">
-                    </div>
-                    <div class="text-right">
-                        <button class="" on:click={()=>imageDelete(i)}>[X]</button>
+                    <div class="flex-auto text-right">
+                        <button on:click={()=>imageDelete(i)}
+                                class="border rounded-md py-1 px-2 my-1 text-center rotate-180">X
+                        </button>
                     </div>
                 </div>
             </div>

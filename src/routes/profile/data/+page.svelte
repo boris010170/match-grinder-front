@@ -1,12 +1,17 @@
 <script lang="ts">
-    import {apiUrl, userStore, uuid} from "$lib/store.js";
+    import {apiUrl, userStore, uuid, titleMain} from "$lib/store.js";
     import Input from "$lib/Input.svelte";
     import Flash from "$lib/Flash.svelte";
+    import Message from "$lib/Message.svelte";
+    import {slide} from 'svelte/transition';
 
     let errorMessage = "";
+    let saving = false;
+    let message = "";
 
     async function save() {
         errorMessage = "";
+        saving = true;
         try {
             const response = await fetch(`${$apiUrl}/api/v1/user/update`, {
                 method: 'POST',
@@ -19,7 +24,10 @@
 
             if (response.ok) {
                 $userStore = await response.json();
-                console.log($userStore);
+                message = "Данные успешно сохранены";
+                setTimeout(() => {
+                    message = ""
+                }, 1500);
             } else {
                 let responseMessage = await response.json();
                 errorMessage = responseMessage.message;
@@ -28,6 +36,7 @@
         } catch (e) {
             errorMessage = e.message
         }
+        saving = false;
     }
 
     let theMap: object | null = null;
@@ -36,7 +45,7 @@
     async function mapInit() {
         try {
             ymaps.ready(TheMapInit);
-        }catch (e) {
+        } catch (e) {
             console.log(e);
             setTimeout(mapInit, 300);
         }
@@ -74,11 +83,22 @@
 </script>
 
 <svelte:head>
-    <title>Профиль</title>
+    <title>Профиль - {$titleMain}</title>
     <script defer async
             src="https://api-maps.yandex.ru/2.1/?lang=ru_RU&apikey=cf1b8beb-bb0c-4563-9d28-c603002dd2ad">
     </script>
 </svelte:head>
+
+
+<div class="relative">
+    {#if message}
+        <div transition:slide={{ duration: 300, axis: 'y' }}
+             class="absolute top-0 left-0 z-50 w-full bg-indigo-800 px-3 py-2 rounded-md text-neutral-200">
+            <Message bind:message={message}/>
+        </div>
+    {/if}
+</div>
+
 
 {#if $userStore && !$userStore.is_guest}
 
@@ -86,19 +106,17 @@
         <Flash type="error" message={errorMessage}/>
     {/if}
 
-    <Input name="name" label="Имя" placeholder="Имя" bind:bindValue="{$userStore.name}" on:change={save}/>
+    <Input name="name" label="Имя" placeholder="Имя" bind:bindValue="{$userStore.name}" />
     <Input type="select"
            name="sex"
            label="Пол"
            placeholder="Пол"
            bind:bindValue="{$userStore.sex}"
-           options="{[{'value': 'M', 'label': 'Мужской'}, {'value': 'F', 'label': 'Женский'}]}"
-           on:change={save}/>
+           options="{[{'value': 'M', 'label': 'Мужской'}, {'value': 'F', 'label': 'Женский'}]}"/>
 
-    <Input name="birth_year" label="Год рождения" placeholder="Год рождения" bind:bindValue="{$userStore.birth_year}"
-           on:change={save}/>
-    <Input name="height" label="Рост" placeholder="Рост" bind:bindValue="{$userStore.height}" on:change={save}/>
-    <Input name="weight" label="Вес" placeholder="Вес" bind:bindValue="{$userStore.weight}" on:change={save}/>
+    <Input name="birth_year" label="Год рождения" placeholder="Год рождения" bind:bindValue="{$userStore.birth_year}"/>
+    <Input name="height" label="Рост" placeholder="Рост" bind:bindValue="{$userStore.height}" />
+    <Input name="weight" label="Вес" placeholder="Вес" bind:bindValue="{$userStore.weight}" />
 
     <Input type="select"
            name="zodiac"
@@ -119,7 +137,13 @@
                {'value': 'Aquarius', 'label': 'Водолей'},
                {'value': 'Pisces', 'label': 'Рыбы'}
                ]}"
-           on:change={save}/>
+            />
 
+    {#if saving}
+        <button class="border rounded-md p-3 mb-2 text-center w-full">Сохранение...</button>
+    {:else}
+        <button class="border rounded-md p-3 mb-2 text-center w-full" on:click={save}>Сохранить</button>
+    {/if}
+    
     <div id="theMap" class="h-96 border"></div>
 {/if}

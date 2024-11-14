@@ -3,7 +3,7 @@
 </script>
 <div>
     <div class="text-right">
-        <button on:click={()=>{message=""}}>[X]</button>
+        <button on:click={()=>{message=""}}>X</button>
     </div>
     {message}
 </div>
