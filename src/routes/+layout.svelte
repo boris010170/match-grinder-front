@@ -27,14 +27,23 @@
 
 <Banner />
 
-<div class="mb-20">
+<div class="sm:hidden min-h-screen max-w-lg flex flex-col border border-red-400">
+    <div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] border border-green-500">
+        <ThemeToggle/>
+        <slot/>
+    </div>
+    <div class="w-full h-20 bg-neutral-800 border-pink-500">
+        <Navbar/>
+    </div>
+</div>
+
+
+<div class="hidden sm:block">
+    <div class="max-w-lg mx-auto w-full z-40">
+        <Navbar/>
+    </div>
     <main class="max-w-lg mx-auto p-2">
         <ThemeToggle/>
         <slot/>
     </main>
-    <div class="fixed bottom-0 w-full z-50">
-        <div class="p-3 bg-neutral-800 max-w-lg mx-auto">
-            <Navbar/>
-        </div>
-    </div>
 </div>
