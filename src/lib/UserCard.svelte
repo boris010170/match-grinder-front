@@ -1,5 +1,6 @@
 <script lang="ts">
     import {apiUrl} from "$lib/store";
+    import type { User } from "$lib/types/user";
 
     let imageIndex = 0;
     export let cardType = "";
@@ -18,7 +19,7 @@
         }
     }
 
-    export let user: UserStore | undefined = undefined;
+    export let user: User | undefined = undefined;
 </script>
 {#if user}
     {#if user.images}

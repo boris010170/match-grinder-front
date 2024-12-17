@@ -2,13 +2,12 @@
     import {apiUrl, userStore, uuid} from "$lib/store";
     import Flash from "$lib/Flash.svelte";
     import UserCard from "$lib/UserCard.svelte";
+    import { bannerStore } from "$lib/stores/bannerStore";
+	import Banner from "$lib/Banner.svelte";
 
     let history = undefined;
-    let errorMessage = "";
 
     async function getHistory() {
-
-        errorMessage = "";
         try {
             const response = await fetch(`${$apiUrl}/api/v1/like/history`, {
                 method: 'GET',
@@ -22,12 +21,11 @@
                 history = await response.json();
                 console.log(history);
             } else {
-                let responseMessage = await response.json();
-                errorMessage = responseMessage.message;
-                console.log(errorMessage);
+                const responseMessage = await response.json() as { message: string };
+                bannerStore.add(responseMessage.message, 'error')
             }
         } catch (e) {
-            errorMessage = e.message
+            bannerStore.add((e as Error).message, 'error')
         }
     }
 
@@ -36,9 +34,7 @@
         getHistory();
     }
 </script>
-{#if errorMessage}
-    <Flash type="error" message={errorMessage}/>
-{/if}
+<Banner />
 
 {#if $userStore && !$userStore.is_guest && history && history.items}
     {#each history.items as item}

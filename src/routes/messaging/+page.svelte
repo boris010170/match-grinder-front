@@ -1,5 +1,5 @@
 <script lang="ts">
-    import {apiUrl, userStore, uuid, titleMain} from "$lib/store";
+    import {apiUrl, userStore, uuid, titleMain, baseUrl} from "$lib/store";
     import Flash from "$lib/Flash.svelte";
     import {page} from '$app/stores'
 
@@ -77,7 +77,21 @@
 {#if errorMessage}
     <Flash type="error" message={errorMessage}/>
 {/if}
+
 {#if $userStore && !$userStore.is_guest && chat && chat.messages}
+
+    {#if chat.profile}
+        <div>
+            <a href="{$baseUrl}/user?uuid={chat.profile.uuid}">
+                <img 
+                    src={`${$apiUrl}/${chat.profile.images[0].url}`} 
+                    alt={chat.profile.name} 
+                    class="h-12 w-12 object-cover rounded-full"
+                />
+            </a>
+        </div>
+    {/if}
+
     <div class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2">
         {#each chat.messages as message}
             {#if $userStore.id === message.from_id}
