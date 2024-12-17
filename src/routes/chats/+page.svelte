@@ -75,7 +75,7 @@
                     {#if item.profile.images && item.profile.images.length > 0}
                         {#each {length: 20} as _}
                             <div class="flex-none">
-                                <a href="{$baseUrl}/messaging/{item.id}">
+                                <a href="{$baseUrl}/messaging?id={item.id}">
                                     <img 
                                         src={`${$apiUrl}/${item.profile.images[0].url}`} 
                                         alt={item.profile.name} 
@@ -97,7 +97,7 @@
                     {#if item.profile.images && item.profile.images.length > 0}
                         <div class="flex gap-3">
                             <div>
-                                <a href="{$baseUrl}/messaging/{item.chat_id}">
+                                <a href="{$baseUrl}/messaging?id={item.chat_id}">
                                     <img 
                                         src={`${$apiUrl}/${item.profile.images[0].url}`} 
                                         alt={item.profile.name} 
@@ -106,7 +106,7 @@
                                 </a>
                             </div>
                             <div class="flex-1">
-                                <a href="{$baseUrl}/messaging/{item.chat_id}" class="block">
+                                <a href="{$baseUrl}/messaging?id={item.chat_id}" class="block">
                                     <div class="font-bold">{item.profile.name}</div>
                                     <div class="text-sm text-gray-600">{item.text}</div>
                                 </a>
