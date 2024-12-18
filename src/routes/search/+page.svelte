@@ -4,8 +4,9 @@
     import UserCard from '$lib/UserCard.svelte';
     import Message from '$lib/Message.svelte';
     import { slide } from 'svelte/transition';
+    import type { User } from '$lib/types/user';
 
-    let users: UserStore[] | undefined = undefined;
+    let users: User[] | undefined = undefined;
     let errorMessage = '';
     let userIndex = 0;
     let message = '';
@@ -26,7 +27,7 @@
                 console.log(users);
                 let _users = await response.json();
 
-                _users.forEach((user: UserStore) => {
+                _users.forEach((user: User) => {
                     if (!users) users = [];
                     users.push(user);
                 });
@@ -37,8 +38,9 @@
                 errorMessage = responseMessage.message;
                 console.log(errorMessage);
             }
-        } catch (e) {
-            errorMessage = e.message;
+        } catch (e: unknown) {
+            errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred';
+            console.error(e);
         }
     }
 
@@ -79,8 +81,9 @@
                 errorMessage = responseMessage.message;
                 console.log(errorMessage);
             }
-        } catch (e) {
-            errorMessage = e.message;
+        } catch (e: unknown) {
+            errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred';
+            console.error(e);
         }
     }
 
