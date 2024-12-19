@@ -1,12 +1,3 @@
-export interface ChatImage {
-    id: number;
-    sort: number;
-    size: number;
-    name: string;
-    url: string;
-    ratio: number;
-}
-
 export interface ChatProfileBase {
     id?: number;
     age: number;
@@ -17,7 +8,7 @@ export interface ChatProfileBase {
 
 export interface ChatProfile extends ChatProfileBase {
     uuid: string;
-    images: ChatImage[];
+    images: Image[];
 }
 
 export interface NewChatItem {

@@ -1,9 +1,7 @@
-import type { Profile } from "./profile";
-
 export interface HistoryResponse {
     items: HistoryItem[];
-    _links: Links;
-    _meta: Meta;
+    _links: DataProviderLinks;
+    _meta: DataProviderMeta;
 }
 
 export interface HistoryItem {
@@ -21,22 +19,4 @@ export interface Image {
     name: string;
     url: string;
     ratio: number;
-}
-
-export interface Links {
-    self: Link;
-    first: Link;
-    last: Link;
-    next: Link;
-}
-
-export interface Link {
-    href: string;
-}
-
-export interface Meta {
-    totalCount: number;
-    pageCount: number;
-    currentPage: number;
-    perPage: number;
 }

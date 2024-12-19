@@ -1,6 +1,5 @@
 <script lang="ts">
     import { apiUrl, userStore, uuid, baseUrl } from '$lib/store';
-    import Flash from '$lib/Flash.svelte';
     import UserCard from '$lib/UserCard.svelte';
     import { bannerStore } from '$lib/stores/bannerStore';
     import Banner from '$lib/Banner.svelte';
