@@ -1,7 +1,6 @@
 <script lang="ts">
     import { apiUrl } from '$lib/store';
     import type { User } from '$lib/types/user';
-    import type { Profile } from './types/profile';
 
     let imageIndex = 0;
 

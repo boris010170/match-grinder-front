@@ -3,6 +3,8 @@
     import Flash from '$lib/Flash.svelte';
     import { page } from '$app/stores';
     import type { ChatWithMessages } from '$lib/types/chatWithMessages';
+    import { bannerStore } from '$lib/stores/bannerStore';
+    import Banner from '$lib/Banner.svelte';
 
     let chatWithMessages: ChatWithMessages | undefined = undefined;
     let message = '';
@@ -10,7 +12,6 @@
     let errorMessage = '';
 
     async function getMessages() {
-        errorMessage = '';
         try {
             const response = await fetch(
                 `${$apiUrl}/api/v1/chat/view?id=` + $page.url.searchParams.get('id'),
@@ -28,11 +29,10 @@
                 console.log(chatWithMessages);
             } else {
                 let responseMessage = await response.json();
-                errorMessage = responseMessage.message;
-                console.log(errorMessage);
+                bannerStore.add(responseMessage.message, 'error');
             }
         } catch (e) {
-            errorMessage = e.message;
+            bannerStore.add((e as Error).message, 'error');
         }
     }
 
@@ -58,12 +58,12 @@
                 console.log(newMessage);
             } else {
                 let responseMessage = await response.json();
-                errorMessage = responseMessage.message;
+                bannerStore.add(responseMessage.message, 'error');
                 console.log(errorMessage);
             }
             sending = false;
         } catch (e) {
-            errorMessage = e.message;
+            bannerStore.add((e as Error).message, 'error');
             sending = false;
         }
     }
@@ -76,9 +76,8 @@
 <svelte:head>
     <title>Чат - {$titleMain}</title>
 </svelte:head>
-{#if errorMessage}
-    <Flash type="error" message={errorMessage} />
-{/if}
+
+<Banner />
 
 {#if $userStore && !$userStore.is_guest && chatWithMessages && chatWithMessages.messages}
     {#if chatWithMessages.profile}
