@@ -1,10 +1,9 @@
 <script lang="ts">
     import { apiUrl } from '$lib/store';
     import type { User } from '$lib/types/user';
+    import type { Profile } from './types/profile';
 
     let imageIndex = 0;
-    export let cardType = '';
-    export let isLike = false;
 
     function nextImage(next = true) {
         if (!user || !user.images) return;
@@ -18,7 +17,7 @@
         }
     }
 
-    export let user: User | undefined = undefined;
+    export let user: User | Profile | undefined = undefined;
 </script>
 
 {#if user}
@@ -32,8 +31,8 @@
                             nextImage(false);
                         }}
                     >
-                        ←</button
-                    >
+                        ←
+                    </button>
 
                     <button
                         class="w-full h-full text-right p-3"
@@ -41,8 +40,8 @@
                             nextImage();
                         }}
                     >
-                        →</button
-                    >
+                        →
+                    </button>
                 </div>
             </div>
 
@@ -57,19 +56,4 @@
             {/each}
         </div>
     {/if}
-
-    {#if cardType === 'history'}
-        {#if isLike}
-            <span>👍</span>
-        {:else}
-            <span>👎</span>
-        {/if}
-    {/if}
-
-    <div>
-        {user.name}, {user.age}
-    </div>
-    <div>
-        {user.about}
-    </div>
 {/if}

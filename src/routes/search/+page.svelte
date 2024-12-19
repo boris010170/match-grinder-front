@@ -125,18 +125,28 @@
                                     <img
                                         src="{$baseUrl}/broken-heart-90.png"
                                         alt="avatar"
-                                        class="w-12 h-12 opacity-60"
+                                        class="w-12 opacity-90"
                                     />
                                 </button>
                             </div>
                             <div class="text-center">
-                                <button
-                                    on:click={() => nextUser(Number(user.id), true)}
-                                    class="border-4 border-green-600 text-green-900 w-12 h-12 rounded-full bg-green-400 bg-opacity-50 font-bolder"
-                                >
-                                    `⏝`
+                                <button on:click={() => nextUser(Number(user.id), true)}>
+                                    <img
+                                        src="{$baseUrl}/heart2.png"
+                                        alt="avatar"
+                                        class="w-12 opacity-90"
+                                    />
                                 </button>
                             </div>
+                        </div>
+                    </div>
+
+                    <div class="p-3">
+                        <div class="mb-3 text-xl">
+                            {user.name}, {user.age}
+                        </div>
+                        <div class="text-muted">
+                            {user.about}
                         </div>
                     </div>
                 </div>
