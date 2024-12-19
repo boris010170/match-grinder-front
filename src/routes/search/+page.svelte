@@ -121,11 +121,12 @@
                     <div class="absolute top-0 w-full aspect-[3/4]">
                         <div class="grid grid-cols-2 gap-3 p-3 w-full absolute bottom-0 z-40">
                             <div class="text-center">
-                                <button
-                                    on:click={() => nextUser(Number(user.id), false)}
-                                    class="border-4 border-red-700 text-red-900 w-12 h-12 rounded-full bg-red-400 bg-opacity-50 font-bolder"
-                                >
-                                    `︵`
+                                <button on:click={() => nextUser(Number(user.id), false)}>
+                                    <img
+                                        src="{$baseUrl}/broken-heart-90.png"
+                                        alt="avatar"
+                                        class="w-12 h-12 opacity-60"
+                                    />
                                 </button>
                             </div>
                             <div class="text-center">
