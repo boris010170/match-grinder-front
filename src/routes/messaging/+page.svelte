@@ -8,7 +8,6 @@
     let chatWithMessages: ChatWithMessages | undefined = undefined;
     let message = '';
     let sending = false;
-    let errorMessage = '';
 
     async function getMessages() {
         try {
@@ -36,7 +35,6 @@
     }
 
     async function sendMessage(to_id: number) {
-        errorMessage = '';
         sending = true;
         try {
             const response = await fetch(`${$apiUrl}/api/v1/message/create`, {
@@ -58,7 +56,6 @@
             } else {
                 let responseMessage = await response.json();
                 bannerStore.add(responseMessage.message, 'error');
-                console.log(errorMessage);
             }
             sending = false;
         } catch (e) {
@@ -80,6 +77,13 @@
     $: if ($userStore && $userStore.in_search && chatWithMessages === undefined) {
         getMessages();
     }
+
+    $: if (chatWithMessages) {
+        const textarea = document.getElementById('messageTextarea');
+        if (textarea) {
+            textarea.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
 </script>
 
 <svelte:head>
@@ -87,6 +91,12 @@
 </svelte:head>
 
 <Banner />
+
+<div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] content-center"></div>
+<div class="flex flex-row h-full w-full ">
+    <div class="border">wed</div>
+    <div class="border">wedwed</div>
+</div>
 
 {#if $userStore && !$userStore.is_guest && chatWithMessages && chatWithMessages.messages}
     <div>
@@ -131,6 +141,7 @@
                 rows="1"
                 on:input={textareaOnEvent}
             ></textarea>
+            <div id="messageTextarea">2</div>
         </div>
         <div class="">
             <button
