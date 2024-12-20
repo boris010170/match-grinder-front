@@ -1,6 +1,5 @@
 <script lang="ts">
     import { apiUrl, userStore, uuid, titleMain, baseUrl } from '$lib/store';
-    import Flash from '$lib/Flash.svelte';
     import { page } from '$app/stores';
     import type { ChatWithMessages } from '$lib/types/chatWithMessages';
     import { bannerStore } from '$lib/stores/bannerStore';
@@ -68,6 +67,16 @@
         }
     }
 
+    /**
+     * Auto resize textarea
+     * @param e
+     */
+    function textareaOnEvent(e: Event) {
+        const target = e.target as HTMLTextAreaElement;
+        target.style.height = 'auto';
+        target.style.height = `${target.scrollHeight}px`;
+    }
+
     $: if ($userStore && $userStore.in_search && chatWithMessages === undefined) {
         getMessages();
     }
@@ -80,17 +89,15 @@
 <Banner />
 
 {#if $userStore && !$userStore.is_guest && chatWithMessages && chatWithMessages.messages}
-    {#if chatWithMessages.profile}
-        <div>
-            <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}">
-                <img
-                    src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
-                    alt={chatWithMessages.profile.name}
-                    class="h-12 w-12 object-cover rounded-full"
-                />
-            </a>
-        </div>
-    {/if}
+    <div>
+        <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}">
+            <img
+                src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
+                alt={chatWithMessages.profile.name}
+                class="h-12 w-12 object-cover rounded-full"
+            />
+        </a>
+    </div>
 
     <div
         class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2"
@@ -114,31 +121,24 @@
         {/each}
     </div>
 
-    <div class="flex items-center">
+    <div class="flex my-3 gap-3">
         <div class="flex-1">
             <textarea
-                class="border w-full h-20 dark:bg-neutral-800"
+                class="border rounded-md w-full max-h-[72px] p-2 dark:bg-neutral-800 resize-none overflow-y-auto"
                 name="text"
                 bind:value={message}
                 placeholder="Сообщение..."
+                rows="1"
+                on:input={textareaOnEvent}
             ></textarea>
         </div>
         <div class="">
-            <!-- icon666.com - MILLIONS vector ICONS FREE -->
             <button
-                on:click|preventDefault={async () => await sendMessage(chatWithMessages.profile.id)}
+                class="border px-3 py-2 rounded-md text-neutral-200"
+                on:click|preventDefault={async () =>
+                    chatWithMessages?.profile && (await sendMessage(chatWithMessages.profile.id))}
             >
-                <svg
-                    viewBox="0 0 64 64"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="40"
-                    height="40"
-                    class="fill-neutral-200"
-                >
-                    <g id="send">
-                        <path d="m54 32-44 17.59 8.08-17.59-8.08-17.59z" />
-                    </g>
-                </svg>
+                send
             </button>
         </div>
     </div>

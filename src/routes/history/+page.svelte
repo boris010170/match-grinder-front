@@ -42,21 +42,24 @@
             <div class="relative">
                 <UserCard user={item.profile} />
 
-                <div class="absolute top-2 right-2">
-                    {#if item.is_like}
-                        <img src="{$baseUrl}/heart2.png" alt="heart" class="w-8 opacity-90" />
-                    {:else}
-                        <img
-                            src="{$baseUrl}/broken-heart-90.png"
-                            alt="broken heart"
-                            class="w-8 opacity-90"
-                        />
-                    {/if}
+                <div class="absolute top-2 right-2 z-40">
+                    <a href="{$baseUrl}/user?uuid={item.profile.uuid}">
+                        {#if item.is_like}
+                            <img src="{$baseUrl}/heart2.png" alt="heart" class="w-8 opacity-90" />
+                        {:else}
+                            <img
+                                src="{$baseUrl}/broken-heart-90.png"
+                                alt="broken heart"
+                                class="w-8 opacity-90"
+                            />
+                        {/if}
+                    </a>
                 </div>
 
                 <div class="p-3">
                     <div class="mb-1 text-sm">
-                        {item.profile.name}, {item.profile.age}
+                        <a href="{$baseUrl}/user?uuid={item.profile.uuid}">{item.profile.name}</a>, {item
+                            .profile.age}
                     </div>
                     <div class="text-xs">
                         {item.profile.about}

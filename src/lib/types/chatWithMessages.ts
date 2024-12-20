@@ -2,21 +2,7 @@ export interface ChatWithMessages {
     id: number;
     deleted: number;
     timestamp: number;
-    profile: {
-        age: number;
-        name: string;
-        sex: string;
-        about: string;
-        uuid: string;
-        images: Array<{
-            id: number;
-            sort: number;
-            size: number;
-            name: string;
-            url: string;
-            ratio: number;
-        }>;
-    };
+    profile: Profile;
     messages: Array<{
         id: number;
         chat_id: number;
