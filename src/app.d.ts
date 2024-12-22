@@ -10,6 +10,20 @@ declare global {
     }
 
     /**
+     * Сообщение
+     */
+    export interface ChatMessage {
+        id: number;
+        chat_id: number;
+        from_id: number;
+        to_id: number;
+        is_read: number;
+        text: string;
+        created_at: number;
+        updated_at: number;
+    }
+
+    /**
      * Профиль пользователя
      */
     export interface Profile {
@@ -38,6 +52,7 @@ declare global {
         in_search: number;
         images: Image[];
     }
+
     /**
      * Фото пользователя
      */
@@ -82,11 +97,11 @@ declare global {
         last: Link;
         next: Link;
     }
-    
+
     export interface DataProviderLink {
         href: string;
     }
-    
+
     export interface DataProviderMeta {
         totalCount: number;
         pageCount: number;

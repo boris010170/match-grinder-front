@@ -6,6 +6,7 @@
     import Banner from '$lib/Banner.svelte';
 
     let chatWithMessages: ChatWithMessages | undefined = undefined;
+    let chatMessages: Array<ChatMessage> = [];
     let message = '';
     let sending = false;
 
@@ -24,6 +25,7 @@
 
             if (response.ok) {
                 chatWithMessages = await response.json();
+                chatMessages = (chatWithMessages as ChatWithMessages).messages;
                 console.log(chatWithMessages);
             } else {
                 let responseMessage = await response.json();
@@ -50,8 +52,8 @@
                 })
             });
             if (response.ok) {
-                const newMessage = await response.json();
-                chatWithMessages.messages = [newMessage, ...chatWithMessages.messages];
+                const newMessage: ChatMessage = await response.json();
+                chatMessages = [newMessage, ...chatMessages];
                 console.log(newMessage);
             } else {
                 let responseMessage = await response.json();
@@ -92,65 +94,72 @@
 
 <Banner />
 
-<div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] content-center"></div>
-<div class="flex flex-row h-full w-full ">
-    <div class="border">wed</div>
-    <div class="border">wedwed</div>
-</div>
-
-{#if $userStore && !$userStore.is_guest && chatWithMessages && chatWithMessages.messages}
-    <div>
-        <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}">
-            <img
-                src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
-                alt={chatWithMessages.profile.name}
-                class="h-12 w-12 object-cover rounded-full"
-            />
-        </a>
-    </div>
-
-    <div
-        class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2"
-    >
-        {#each chatWithMessages.messages as message}
-            {#if $userStore.id === message.from_id}
-                <div class="text-right">
-                    <div class="!rounded-br-none text-neutral-200 bg-indigo-800 dark:bg-indigo-800">
-                        {message.text}
-                        {message.id}
-                    </div>
-                </div>
-            {:else}
-                <div>
-                    <div class="!rounded-bl-none text-neutral-800 bg-gray-200 dark:bg-gray-200">
-                        {message.text}
-                        {message.id}
-                    </div>
-                </div>
-            {/if}
-        {/each}
-    </div>
-
-    <div class="flex my-3 gap-3">
-        <div class="flex-1">
-            <textarea
-                class="border rounded-md w-full max-h-[72px] p-2 dark:bg-neutral-800 resize-none overflow-y-auto"
-                name="text"
-                bind:value={message}
-                placeholder="Сообщение..."
-                rows="1"
-                on:input={textareaOnEvent}
-            ></textarea>
-            <div id="messageTextarea">2</div>
+{#if chatWithMessages && chatWithMessages.messages}
+    <div class="flex flex-col gap-3 h-[calc(100vh-7rem)]">
+        <div class="justify-center">
+            <div>
+                <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}">
+                    <img
+                        src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
+                        alt={chatWithMessages.profile.name}
+                        class="h-12 w-12 object-cover rounded-full"
+                    />
+                </a>
+            </div>
         </div>
-        <div class="">
-            <button
-                class="border px-3 py-2 rounded-md text-neutral-200"
-                on:click|preventDefault={async () =>
-                    chatWithMessages?.profile && (await sendMessage(chatWithMessages.profile.id))}
+        <div class="flex-1 content-end">
+            <div
+                class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2"
             >
-                send
-            </button>
+                {#if chatMessages}
+                    {#each chatMessages as message}
+                        {#if $userStore.id === message.from_id}
+                            <div class="text-right">
+                                <div
+                                    class="!rounded-br-none text-neutral-200 bg-indigo-800 dark:bg-indigo-800"
+                                >
+                                    {message.text}
+                                    {message.id}
+                                </div>
+                            </div>
+                        {:else}
+                            <div>
+                                <div
+                                    class="!rounded-bl-none text-neutral-800 bg-gray-200 dark:bg-gray-200"
+                                >
+                                    {message.text}
+                                    {message.id}
+                                </div>
+                            </div>
+                        {/if}
+                    {/each}
+                {/if}
+            </div>
+        </div>
+        <div>
+            <div class="flex gap-3">
+                <div class="flex-1">
+                    <textarea
+                        class="border rounded-md w-full max-h-[72px] p-2 dark:bg-neutral-800 resize-none overflow-y-auto scrollbar-hide"
+                        name="text"
+                        bind:value={message}
+                        placeholder="Сообщение..."
+                        rows="1"
+                        on:input={textareaOnEvent}
+                    ></textarea>
+                    <div id="messageTextarea"></div>
+                </div>
+                <div class="">
+                    <button
+                        class="border px-3 py-2 rounded-md text-neutral-200"
+                        on:click|preventDefault={async () =>
+                            chatWithMessages?.profile &&
+                            (await sendMessage(chatWithMessages.profile.id))}
+                    >
+                        send
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 {/if}
