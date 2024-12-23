@@ -9,6 +9,12 @@ declare global {
         // interface Platform {}
     }
 
+    export interface ChatMessagesResponse {
+        items: ChatMessage[];
+        _links: DataProviderLinks;
+        _meta: DataProviderMeta;
+    }
+
     /**
      * Сообщение
      */
@@ -92,10 +98,10 @@ declare global {
     }
 
     export interface DataProviderLinks {
-        self: Link;
-        first: Link;
-        last: Link;
-        next: Link;
+        self: DataProviderLink;
+        first: DataProviderLink;
+        last: DataProviderLink;
+        next: DataProviderLink;
     }
 
     export interface DataProviderLink {

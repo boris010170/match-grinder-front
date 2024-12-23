@@ -4,13 +4,18 @@
     import type { ChatWithMessages } from '$lib/types/chatWithMessages';
     import { bannerStore } from '$lib/stores/bannerStore';
     import Banner from '$lib/Banner.svelte';
+    import { tick } from 'svelte';
 
     let chatWithMessages: ChatWithMessages | undefined = undefined;
+    let ChatMessagesResponse: ChatMessagesResponse;
     let chatMessages: Array<ChatMessage> = [];
     let message = '';
     let sending = false;
+    let getMessagesUrl: string | undefined =
+        `${$apiUrl}/api/v1/message?chat_id=` + $page.url.searchParams.get('id');
+    let scrollToMessageId: string = '';
 
-    async function getMessages() {
+    async function getChat() {
         try {
             const response = await fetch(
                 `${$apiUrl}/api/v1/chat/view?id=` + $page.url.searchParams.get('id'),
@@ -25,8 +30,36 @@
 
             if (response.ok) {
                 chatWithMessages = await response.json();
-                chatMessages = (chatWithMessages as ChatWithMessages).messages;
+
                 console.log(chatWithMessages);
+            } else {
+                let responseMessage = await response.json();
+                bannerStore.add(responseMessage.message, 'error');
+            }
+        } catch (e) {
+            bannerStore.add((e as Error).message, 'error');
+        }
+    }
+
+    async function getMessages() {
+        if (getMessagesUrl === undefined) return;
+
+        try {
+            const response = await fetch(getMessagesUrl, {
+                method: 'GET',
+                headers: new Headers({
+                    uuid: $uuid,
+                    'Content-Type': 'application/json'
+                })
+            });
+
+            if (response.ok) {
+                ChatMessagesResponse = await response.json();
+                scrollToMessageId = 'message_' + ChatMessagesResponse.items[0].id;
+                chatMessages = [...ChatMessagesResponse.items.reverse(), ...chatMessages];
+                getMessagesUrl = ChatMessagesResponse._links.next?.href || undefined;
+                await tick();
+                scroll();
             } else {
                 let responseMessage = await response.json();
                 bannerStore.add(responseMessage.message, 'error');
@@ -38,6 +71,7 @@
 
     async function sendMessage(to_id: number) {
         sending = true;
+
         try {
             const response = await fetch(`${$apiUrl}/api/v1/message/create`, {
                 method: 'POST',
@@ -52,13 +86,19 @@
                 })
             });
             if (response.ok) {
+                message = '';
                 const newMessage: ChatMessage = await response.json();
-                chatMessages = [newMessage, ...chatMessages];
+                chatMessages = [...chatMessages, newMessage];
                 console.log(newMessage);
+
+                scrollToMessageId = 'message_' + newMessage.id;
+                await tick();
+                scroll();
             } else {
                 let responseMessage = await response.json();
                 bannerStore.add(responseMessage.message, 'error');
             }
+
             sending = false;
         } catch (e) {
             bannerStore.add((e as Error).message, 'error');
@@ -76,15 +116,18 @@
         target.style.height = `${target.scrollHeight}px`;
     }
 
-    $: if ($userStore && $userStore.in_search && chatWithMessages === undefined) {
-        getMessages();
+    async function scroll() {
+        const message = document.getElementById(scrollToMessageId);
+        if (message) {
+            message.scrollIntoView();
+        } else {
+            console.log('message not found');
+        }
     }
 
-    $: if (chatWithMessages) {
-        const textarea = document.getElementById('messageTextarea');
-        if (textarea) {
-            textarea.scrollIntoView({ behavior: 'smooth' });
-        }
+    $: if ($userStore && $userStore.in_search && chatWithMessages === undefined) {
+        getChat();
+        getMessages();
     }
 </script>
 
@@ -96,18 +139,23 @@
 
 {#if chatWithMessages && chatWithMessages.messages}
     <div class="flex flex-col gap-3 h-[calc(100vh-7rem)]">
-        <div class="justify-center">
-            <div>
-                <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}">
-                    <img
-                        src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
-                        alt={chatWithMessages.profile.name}
-                        class="h-12 w-12 object-cover rounded-full"
-                    />
-                </a>
-            </div>
+        <div class="justify-items-center">
+            <a href="{$baseUrl}/user?uuid={chatWithMessages.profile.uuid}" class="block">
+                <img
+                    src={`${$apiUrl}/${chatWithMessages.profile.images[0].url}`}
+                    alt={chatWithMessages.profile.name}
+                    class="h-12 w-12 object-cover rounded-full"
+                />
+            </a>
         </div>
-        <div class="flex-1 content-end">
+        <div class="content-end overflow-scroll">
+            {#if getMessagesUrl}
+                <div class="justify-items-center">
+                    <button class="border rounded-md px-2 block" on:click={getMessages}
+                        >more...</button
+                    >
+                </div>
+            {/if}
             <div
                 class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2"
             >
@@ -116,10 +164,11 @@
                         {#if $userStore.id === message.from_id}
                             <div class="text-right">
                                 <div
+                                    id="message_{message.id}"
                                     class="!rounded-br-none text-neutral-200 bg-indigo-800 dark:bg-indigo-800"
+                                    style="white-space: pre-line"
                                 >
                                     {message.text}
-                                    {message.id}
                                 </div>
                             </div>
                         {:else}
@@ -152,6 +201,7 @@
                 <div class="">
                     <button
                         class="border px-3 py-2 rounded-md text-neutral-200"
+                        disabled={sending}
                         on:click|preventDefault={async () =>
                             chatWithMessages?.profile &&
                             (await sendMessage(chatWithMessages.profile.id))}
