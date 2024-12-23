@@ -27,6 +27,7 @@ declare global {
         text: string;
         created_at: number;
         updated_at: number;
+        created_at_formatted: string;
     }
 
     /**

@@ -106,6 +106,23 @@
         }
     }
 
+    function showDate(date: string) {
+        const d = new Date(date);
+        const today = new Date();
+        if (today.toDateString() === d.toDateString()) {
+            return d.getHours() + ':' + d.getMinutes().toString().padStart(2, '0');
+        }
+        return (
+            d.getDate().toString().padStart(2, '0') +
+            '/' +
+            d.getMonth().toString().padStart(2, '0') +
+            ' ' +
+            d.getHours() +
+            ':' +
+            d.getMinutes().toString().padStart(2, '0')
+        );
+    }
+
     /**
      * Auto resize textarea
      * @param e
@@ -157,18 +174,28 @@
                 </div>
             {/if}
             <div
-                class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-4 [&>div>*]:py-2"
+                class="grid grid-cols-1 gap-3 [&>div>*]:rounded-2xl [&>div>*]:inline-block [&>div>*]:px-3 [&>div>*]:py-1"
             >
                 {#if chatMessages}
                     {#each chatMessages as message}
                         {#if $userStore.id === message.from_id}
-                            <div class="text-right">
+                            <div class="text-right relative">
                                 <div
                                     id="message_{message.id}"
-                                    class="!rounded-br-none text-neutral-200 bg-indigo-800 dark:bg-indigo-800"
+                                    class="min-w-24
+                                     max-w-72
+                                     break-all
+                                    !rounded-br-none
+                                     text-neutral-200
+                                     bg-indigo-800
+                                     dark:bg-indigo-800"
                                     style="white-space: pre-line"
                                 >
                                     {message.text}
+                                </div>
+
+                                <div class="absolute top-0 left-0 !p-0 text-xs text-neutral-600">
+                                    {showDate(message.created_at_formatted)}
                                 </div>
                             </div>
                         {:else}
@@ -177,7 +204,7 @@
                                     class="!rounded-bl-none text-neutral-800 bg-gray-200 dark:bg-gray-200"
                                 >
                                     {message.text}
-                                    {message.id}
+                                    {showDate(message.created_at_formatted)}
                                 </div>
                             </div>
                         {/if}
