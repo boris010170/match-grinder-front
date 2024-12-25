@@ -5,14 +5,14 @@
     import { bannerStore } from '$lib/stores/bannerStore';
     import Banner from '$lib/Banner.svelte';
     import { tick } from 'svelte';
+    import { browser } from '$app/environment';
 
     let chatWithMessages: ChatWithMessages | undefined = undefined;
     let ChatMessagesResponse: ChatMessagesResponse;
     let chatMessages: Array<ChatMessage> = [];
     let message = '';
     let sending = false;
-    let getMessagesUrl: string | undefined =
-        `${$apiUrl}/api/v1/message?chat_id=` + $page.url.searchParams.get('id');
+    let getMessagesUrl: string | undefined = '';
     let scrollToMessageId: string = '';
 
     async function getChat() {
@@ -42,6 +42,11 @@
     }
 
     async function getMessages() {
+        if (getMessagesUrl === '') {
+            getMessagesUrl =
+                `${$apiUrl}/api/v1/message?chat_id=` + $page.url.searchParams.get('id');
+        }
+
         if (getMessagesUrl === undefined) return;
 
         try {
