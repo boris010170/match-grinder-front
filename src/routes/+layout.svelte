@@ -1,18 +1,18 @@
 <script lang="ts">
     import '../app.css';
-    import {baseUrl, apiUrl, titleMain, uuid, darkMode, userStore, uploadsUrl} from '$lib/store';
-    import {AuthGetUUID, AuthGetUserStore} from '$lib/Auth';
-    import {onMount} from "svelte";
-    import ThemeToggle from "$lib/ThemeToggle.svelte";
-    import {goto} from "$app/navigation";
-    import Navbar from "$lib/nav/Navbar.svelte";
-    import Banner from "$lib/Banner.svelte";
+    import { baseUrl, apiUrl, titleMain, uuid, darkMode, userStore, uploadsUrl } from '$lib/store';
+    import { AuthGetUUID, AuthGetUserStore } from '$lib/Auth';
+    import { onMount } from 'svelte';
+    import ThemeToggle from '$lib/ThemeToggle.svelte';
+    import { goto } from '$app/navigation';
+    import Navbar from '$lib/nav/Navbar.svelte';
+    import Banner from '$lib/Banner.svelte';
 
     $darkMode = true;
-    $baseUrl = import.meta.env.VITE_ROOT_URL;
+    $baseUrl = import.meta.env.VITE_ROOT_URL || 'http://localhost:5173';
     $apiUrl = import.meta.env.VITE_API_URL;
     $uploadsUrl = $apiUrl;
-    $titleMain = "Match Grinder";
+    $titleMain = 'Match Grinder';
 
     onMount(async () => {
         $uuid = await AuthGetUUID();
@@ -27,14 +27,24 @@
 
 <Banner />
 
-<div class="mb-20">
-    <main class="max-w-lg mx-auto p-2">
-        <ThemeToggle/>
-        <slot/>
-    </main>
-    <div class="fixed bottom-0 w-full z-50">
-        <div class="p-3 bg-neutral-800 max-w-lg mx-auto">
-            <Navbar/>
+<div class="sm:hidden min-h-screen max-w-lg flex flex-col">
+    <div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] content-center">
+        <ThemeToggle />
+        <div class="m-3">
+            <slot />
         </div>
     </div>
+    <div class="w-full h-20 bg-neutral-800">
+        <Navbar />
+    </div>
+</div>
+
+<div class="hidden sm:block">
+    <div class="max-w-lg mx-auto w-full z-40">
+        <Navbar />
+    </div>
+    <main class="max-w-lg mx-auto p-2">
+        <ThemeToggle />
+        <slot />
+    </main>
 </div>

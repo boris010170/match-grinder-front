@@ -9,6 +9,57 @@ declare global {
         // interface Platform {}
     }
 
+    export interface ChatMessagesResponse {
+        items: ChatMessage[];
+        _links: DataProviderLinks;
+        _meta: DataProviderMeta;
+    }
+
+    /**
+     * Сообщение
+     */
+    export interface ChatMessage {
+        id: number;
+        chat_id: number;
+        from_id: number;
+        to_id: number;
+        is_read: number;
+        text: string;
+        created_at: number;
+        updated_at: number;
+        created_at_formatted: string;
+    }
+
+    /**
+     * Профиль пользователя
+     */
+    export interface Profile {
+        id: number;
+        username: string;
+        is_guest: boolean;
+        age: number;
+        name: string;
+        sex: 'M' | 'F';
+        about: string;
+        uuid: string;
+        birth_year: number;
+        zodiac: string;
+        height: number;
+        weight: number;
+        lat: string;
+        lng: string;
+        search_sex: string;
+        search_radius: number;
+        search_from: number;
+        search_to: number;
+        search_weight_from: number;
+        search_weight_to: number;
+        search_height_from: number;
+        search_height_to: number;
+        in_search: number;
+        images: Image[];
+    }
+
     /**
      * Фото пользователя
      */
@@ -45,6 +96,24 @@ declare global {
         search_height_to?: number;
         in_search?: number;
         images?: Image[];
+    }
+
+    export interface DataProviderLinks {
+        self: DataProviderLink;
+        first: DataProviderLink;
+        last: DataProviderLink;
+        next: DataProviderLink;
+    }
+
+    export interface DataProviderLink {
+        href: string;
+    }
+
+    export interface DataProviderMeta {
+        totalCount: number;
+        pageCount: number;
+        currentPage: number;
+        perPage: number;
     }
 }
 
