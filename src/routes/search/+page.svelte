@@ -1,19 +1,14 @@
 <script lang="ts">
     import { titleMain, userStore, baseUrl, apiUrl, uuid } from '$lib/store.js';
-    import Flash from '$lib/Flash.svelte';
     import UserCard from '$lib/UserCard.svelte';
-    import Message from '$lib/Message.svelte';
-    import { slide } from 'svelte/transition';
     import type { User } from '$lib/types/user';
+    import { bannerStore } from '$lib/stores/bannerStore';
 
     let users: User[] | undefined = undefined;
-    let errorMessage = '';
     let userIndex = 0;
-    let message = '';
 
     async function searchUsers() {
         if (!$userStore.in_search) return;
-        errorMessage = '';
         try {
             const response = await fetch(`${$apiUrl}/api/v1/search`, {
                 method: 'GET',
@@ -24,7 +19,6 @@
             });
 
             if (response.ok) {
-                console.log(users);
                 let _users = await response.json();
 
                 _users.forEach((user: User) => {
@@ -32,14 +26,17 @@
                     users.push(user);
                 });
                 users = users;
-                console.log(users);
             } else {
-                let responseMessage = await response.json();
-                errorMessage = responseMessage.message;
-                console.log(errorMessage);
+                const responseMessage = await response.json();
+                const errorMessage = (responseMessage as Error).message;
+                bannerStore.add(errorMessage, 'error');
+                console.error(errorMessage);
             }
         } catch (e: unknown) {
-            errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred';
+            bannerStore.add(
+                e instanceof Error ? e.message : 'An unexpected error occurred',
+                'error'
+            );
             console.error(e);
         }
     }
@@ -56,7 +53,6 @@
     }
 
     async function like(profile_id: number, is_like: boolean) {
-        errorMessage = '';
         try {
             const response = await fetch(`${$apiUrl}/api/v1/like/create`, {
                 method: 'POST',
@@ -73,16 +69,19 @@
             if (response.ok) {
                 let result = await response.json();
                 if (result > 0) {
-                    message = 'У вас новое совпадение, так держать!';
+                    bannerStore.add('У вас новое совпадение, так держать!', 'success');
                 }
-                console.log(result);
             } else {
-                let responseMessage = await response.json();
-                errorMessage = responseMessage.message;
-                console.log(errorMessage);
+                const responseMessage = await response.json();
+                const errorMessage = (responseMessage as Error).message;
+                bannerStore.add(errorMessage, 'error');
+                console.error(errorMessage);
             }
         } catch (e: unknown) {
-            errorMessage = e instanceof Error ? e.message : 'An unexpected error occurred';
+            bannerStore.add(
+                e instanceof Error ? e.message : 'An unexpected error occurred',
+                'error'
+            );
             console.error(e);
         }
     }
@@ -97,20 +96,6 @@
     <title>Поиск - {$titleMain}</title>
 </svelte:head>
 
-{#if errorMessage}
-    <Flash type="error" message={errorMessage} />
-{/if}
-
-<div class="relative">
-    {#if message}
-        <div
-            transition:slide={{ duration: 300, axis: 'y' }}
-            class="absolute top-0 left-0 z-50 w-full bg-indigo-800 px-3 py-2 rounded-md text-neutral-200"
-        >
-            <Message bind:message />
-        </div>
-    {/if}
-</div>
 {#if $userStore && !$userStore.is_guest}
     {#if $userStore.in_search}
         {#if users && users.length > 0}
@@ -156,9 +141,8 @@
         {/if}
     {:else}
         <div class="text-center mt-36 text-3xl">
-            Сначала необходимо заполнить <a href="{$baseUrl}/profile/data" class="underline"
-                >профиль</a
-            >,
+            Сначала необходимо заполнить
+            <a href="{$baseUrl}/profile/data" class="underline">профиль</a>,
             <a href="{$baseUrl}/profile/search" class="underline">параметры поиска</a> и
             <a href="{$baseUrl}/profile/media" class="underline">добавить фотографии</a>.
         </div>
