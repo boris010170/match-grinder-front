@@ -2,7 +2,6 @@
     import { apiUrl, userStore, uuid, baseUrl } from '$lib/store';
     import UserCard from '$lib/UserCard.svelte';
     import { bannerStore } from '$lib/stores/bannerStore';
-    import Banner from '$lib/Banner.svelte';
     import type { HistoryResponse } from '$lib/types/historyResponse';
 
     let historyResponse: HistoryResponse | undefined = undefined;
@@ -33,8 +32,6 @@
         getHistory();
     }
 </script>
-
-<Banner />
 
 {#if $userStore && !$userStore.is_guest && historyResponse && historyResponse.items}
     <div class="grid grid-cols-2 gap-3">
