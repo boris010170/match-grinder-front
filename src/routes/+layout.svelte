@@ -14,6 +14,9 @@
     $uploadsUrl = $apiUrl;
     $titleMain = 'Match Grinder';
 
+    let innerWidth = 0;
+    let innerHeight = 0;
+
     onMount(async () => {
         $uuid = await AuthGetUUID();
         $userStore = await AuthGetUserStore($uuid, `${$apiUrl}/api/v1/user/show`);
@@ -25,26 +28,29 @@
     });
 </script>
 
-<Banner />
+<svelte:window bind:innerWidth bind:innerHeight />
 
-<div class="sm:hidden min-h-screen max-w-lg flex flex-col">
-    <div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] content-center">
-        <ThemeToggle />
-        <div class="m-3">
-            <slot />
+<Banner />
+<ThemeToggle />
+
+{#if innerWidth < 640}
+    <div class="min-h-screen max-w-lg flex flex-col">
+        <div class="flex-grow overflow-auto max-h-[calc(100vh-5rem)] content-center">
+            <main class="m-3 sm:max-w-lg sm:mx-auto sm:p-2">
+                <slot />
+            </main>
+        </div>
+        <div class="w-full h-20 bg-neutral-800 place-content-center">
+            <Navbar />
         </div>
     </div>
-    <div class="w-full h-20 bg-neutral-800">
-        <Navbar />
+{:else}
+    <div class="hidden sm:block">
+        <div class="max-w-lg mx-auto w-full z-40">
+            <Navbar />
+        </div>
+        <main class="max-w-lg mx-auto p-2">
+            <slot />
+        </main>
     </div>
-</div>
-
-<div class="hidden sm:block">
-    <div class="max-w-lg mx-auto w-full z-40">
-        <Navbar />
-    </div>
-    <main class="max-w-lg mx-auto p-2">
-        <ThemeToggle />
-        <slot />
-    </main>
-</div>
+{/if}
