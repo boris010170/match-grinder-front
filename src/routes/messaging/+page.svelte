@@ -30,8 +30,6 @@
 
             if (response.ok) {
                 chatWithMessages = await response.json();
-
-                console.log(chatWithMessages);
             } else {
                 let responseMessage = await response.json();
                 bannerStore.add(responseMessage.message, 'error');
@@ -60,11 +58,13 @@
 
             if (response.ok) {
                 ChatMessagesResponse = await response.json();
-                scrollToMessageId = 'message_' + ChatMessagesResponse.items[0].id;
-                chatMessages = [...ChatMessagesResponse.items.reverse(), ...chatMessages];
-                getMessagesUrl = ChatMessagesResponse._links.next?.href || undefined;
-                await tick();
-                scroll();
+                if (ChatMessagesResponse.items.length > 0) {
+                    scrollToMessageId = 'message_' + ChatMessagesResponse.items[0].id;
+                    chatMessages = [...ChatMessagesResponse.items.reverse(), ...chatMessages];
+                    getMessagesUrl = ChatMessagesResponse._links.next?.href || undefined;
+                    await tick();
+                    scroll();
+                }
             } else {
                 let responseMessage = await response.json();
                 bannerStore.add(responseMessage.message, 'error');
@@ -94,7 +94,6 @@
                 message = '';
                 const newMessage: ChatMessage = await response.json();
                 chatMessages = [...chatMessages, newMessage];
-                console.log(newMessage);
 
                 scrollToMessageId = 'message_' + newMessage.id;
                 await tick();
@@ -121,7 +120,7 @@
             d.getDate().toString().padStart(2, '0') +
             '/' +
             d.getMonth().toString().padStart(2, '0') +
-            ' ' +
+            '<br/>' +
             d.getHours() +
             ':' +
             d.getMinutes().toString().padStart(2, '0')
@@ -143,7 +142,7 @@
         if (message) {
             message.scrollIntoView();
         } else {
-            console.log('message not found');
+            console.error('message not found');
         }
     }
 
@@ -170,7 +169,7 @@
                 />
             </a>
         </div>
-        <div class="content-end overflow-scroll">
+        <div class="content-end overflow-scroll flex-1">
             {#if getMessagesUrl}
                 <div class="justify-items-center">
                     <button class="border rounded-md px-2 block" on:click={getMessages}
@@ -200,16 +199,24 @@
                                 </div>
 
                                 <div class="absolute top-0 left-0 !p-0 text-xs text-neutral-600">
-                                    {showDate(message.created_at_formatted)}
+                                    {@html showDate(message.created_at_formatted)}
                                 </div>
                             </div>
                         {:else}
-                            <div>
+                            <div class="relative">
                                 <div
-                                    class="!rounded-bl-none text-neutral-800 bg-gray-200 dark:bg-gray-200"
+                                    class="
+                                    max-w-72
+                                    break-all
+                                    !rounded-bl-none
+                                    text-neutral-800
+                                    bg-gray-200
+                                    dark:bg-gray-200"
                                 >
                                     {message.text}
-                                    {showDate(message.created_at_formatted)}
+                                </div>
+                                <div class="absolute top-0 right-0 !p-0 text-xs text-neutral-600">
+                                    {@html showDate(message.created_at_formatted)}
                                 </div>
                             </div>
                         {/if}

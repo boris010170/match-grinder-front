@@ -21,7 +21,6 @@
         $uuid = await AuthGetUUID();
         $userStore = await AuthGetUserStore($uuid, `${$apiUrl}/api/v1/user/show`);
 
-        console.log($userStore);
         if ($userStore.is_guest) {
             await goto(`${$baseUrl}/signin`);
         }
