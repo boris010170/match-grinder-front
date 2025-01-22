@@ -24,7 +24,6 @@
             startPage = 1;
         }
 
-        console.log(startPage, endPage, Array.from(Array(endPage + 1).keys()).slice(startPage));
         pages = Array.from(Array(endPage + 1).keys()).slice(startPage);
     };
 
