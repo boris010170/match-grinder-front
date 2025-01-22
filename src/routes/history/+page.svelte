@@ -3,12 +3,15 @@
     import UserCard from '$lib/UserCard.svelte';
     import { bannerStore } from '$lib/stores/bannerStore';
     import type { HistoryResponse } from '$lib/types/historyResponse';
+    import Pagination from '$lib/Paginator.svelte';
 
     let historyResponse: HistoryResponse | undefined = undefined;
+    let currentPage = 1;
+    let totalPages = 2;
 
     async function getHistory() {
         try {
-            const response = await fetch(`${$apiUrl}/api/v1/like/history`, {
+            const response = await fetch(`${$apiUrl}/api/v1/like/history?page=${currentPage}`, {
                 method: 'GET',
                 headers: new Headers({
                     uuid: $uuid,
@@ -18,6 +21,9 @@
 
             if (response.ok) {
                 historyResponse = await response.json();
+
+                currentPage = historyResponse?._meta?.currentPage || 1;
+                totalPages = historyResponse?._meta?.pageCount || 1;
                 console.log(history);
             } else {
                 const responseMessage = (await response.json()) as { message: string };
@@ -27,6 +33,11 @@
             bannerStore.add((e as Error).message, 'error');
         }
     }
+
+    const handlePageChange = (page: number) => {
+        currentPage = page;
+        getHistory();
+    };
 
     $: if ($userStore && $userStore.in_search && historyResponse == undefined) {
         getHistory();
@@ -65,4 +76,5 @@
             </div>
         {/each}
     </div>
+    <Pagination {currentPage} {totalPages} onPageChange={handlePageChange} />
 {/if}
